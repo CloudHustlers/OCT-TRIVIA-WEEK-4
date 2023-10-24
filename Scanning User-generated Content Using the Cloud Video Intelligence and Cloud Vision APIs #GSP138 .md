@@ -1,8 +1,10 @@
 # GSP138
 ## Run in cloudshell
+### Get region from Task 6 as shown in screenshot
 ```cmd
 export REGION=
 ```
+![hint](https://cdn.discordapp.com/attachments/1153622026288910428/1166324411587108875/hint.png)
 ```cmd
 export PROJECT_ID=$(gcloud info --format='value(config.project)')
 export IV_BUCKET_NAME=${PROJECT_ID}-upload
