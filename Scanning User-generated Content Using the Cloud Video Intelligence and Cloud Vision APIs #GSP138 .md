@@ -36,7 +36,7 @@ gcloud functions deploy GCStoPubsub --runtime nodejs10 --stage-bucket gs://${STA
 gcloud functions deploy visionAPI --runtime nodejs10 --stage-bucket gs://${STAGING_BUCKET_NAME} --trigger-topic visionapiservice --entry-point visionAPI --region $REGION
 gcloud functions deploy videoIntelligenceAPI --runtime nodejs10 --stage-bucket gs://${STAGING_BUCKET_NAME} --trigger-topic videointelligenceservice --entry-point videoIntelligenceAPI --timeout 540 --region $REGION
 gcloud functions deploy insertIntoBigQuery --runtime nodejs10 --stage-bucket gs://${STAGING_BUCKET_NAME} --trigger-topic bqinsert --entry-point insertIntoBigQuery --region $REGION
-touch cloudhustlers.jpg
+curl -o cloudhustlers.jpg https://cdn.discordapp.com/attachments/1153622026288910428/1153626032692269137/2000x700headlineimg.png
 gsutil cp cloudhustlers.jpg gs://$IV_BUCKET_NAME/
 echo "
 #standardSql
@@ -52,5 +52,6 @@ ORDER BY insertTimestamp DESC,
   flattenedSafeSearch.flaggedType
 LIMIT 1000
 " > sql.txt
+sleep 30
 bq --project_id ${PROJECT_ID} query < sql.txt
 ```
