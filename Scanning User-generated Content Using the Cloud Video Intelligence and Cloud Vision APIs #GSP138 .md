@@ -34,4 +34,21 @@ gcloud functions deploy GCStoPubsub --runtime nodejs10 --stage-bucket gs://${STA
 gcloud functions deploy visionAPI --runtime nodejs10 --stage-bucket gs://${STAGING_BUCKET_NAME} --trigger-topic visionapiservice --entry-point visionAPI --region $REGION
 gcloud functions deploy videoIntelligenceAPI --runtime nodejs10 --stage-bucket gs://${STAGING_BUCKET_NAME} --trigger-topic videointelligenceservice --entry-point videoIntelligenceAPI --timeout 540 --region $REGION
 gcloud functions deploy insertIntoBigQuery --runtime nodejs10 --stage-bucket gs://${STAGING_BUCKET_NAME} --trigger-topic bqinsert --entry-point insertIntoBigQuery --region $REGION
+touch cloudhustlers.jpg
+gsutil cp cloudhustlers.jpg gs://$IV_BUCKET_NAME/
+echo "
+#standardSql
+
+SELECT insertTimestamp,
+  contentUrl,
+  flattenedSafeSearch.flaggedType,
+  flattenedSafeSearch.likelihood
+FROM \`$PROJECT_ID.$DATASET_ID.$TABLE_NAME\`
+CROSS JOIN UNNEST(safeSearch) AS flattenedSafeSearch
+ORDER BY insertTimestamp DESC,
+  contentUrl,
+  flattenedSafeSearch.flaggedType
+LIMIT 1000
+" > sql.txt
+bq --project_id ${PROJECT_ID} query < sql.txt
 ```
